@@ -16,13 +16,10 @@ extra-source-files:  ChangeLog.md
 cabal-version:       >=1.10
 
 executable Test
-    main-is:    Main.hs
-  build-depends:       base >=4.8 && <4.10, containers , ansi-terminal , here 
+  main-is:             Main.hs
+  build-depends:       base >=4.9 && <4.10, containers , ansi-terminal , here 
   default-language:    Haskell2010
 library
-  exposed-modules:     Tour, Parse, RoseSeq, Edge
-  -- other-modules:       
-  -- other-extensions:    
+  exposed-modules:     Tour, RoseSeq, Serialize
   build-depends:       base >=4.9 && <4.10, containers 
-  -- hs-source-dirs:      
   default-language:    Haskell2010

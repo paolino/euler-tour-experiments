@@ -24,12 +24,12 @@ drawTree = drawT (init . tail . show)
 readT = fromString head 
 
 line = do
-    setSGR [ SetColor Foreground Vivid Red]
+    setSGR [SetColor Foreground Vivid Red]
     putStrLn "\n============================"
     setSGR [Reset]
 parag t v = do
-    setSGR [ SetConsoleIntensity BoldIntensity, SetUnderlining SingleUnderline]
-    putStrLn $ "\n" ++ t ++ ":\n"
+    setSGR [SetConsoleIntensity BoldIntensity, SetUnderlining SingleUnderline]
+    putStrLn $ "\n" ++ t ++ "\n"
     setSGR [Reset]
     putStrLn v
     line
@@ -39,12 +39,11 @@ main :: IO ()
 main = do
     setTitle "Euler Tour Test"
     line
-    parag "Serialization" t1
-    parag "Tree"  $ drawTree $ readT t1
-    parag "Euler tour" $ toList . mkEulerTour $ readT t1
-    parag "Euler tour -> Tree" $ drawTree $ fromEulerTour .  mkEulerTour $ readT t1
-    parag "Euler tour -> Tree -> Serialization" $ toString return $ fromEulerTour .  mkEulerTour $ readT t1
-
+    parag "String" t1
+    parag "String-Tree"  $ drawTree $ readT t1
+    parag "String-Tree-Tour" $ toList . mkEulerTour $ readT t1
+    parag "String-Tree-Tour-Tree" $ drawTree $ fromEulerTour .  mkEulerTour $ readT t1
+    parag "String-Tree-Tour-Tree-String" $ toString return $ fromEulerTour .  mkEulerTour $ readT t1
     setTitle ""
 
 
