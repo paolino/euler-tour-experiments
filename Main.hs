@@ -4,7 +4,7 @@ module Main where
 import System.Console.ANSI
 
 import Data.String.Here
-import Parse
+import Serialize (fromString)
 import RoseSeq (drawT)
 import Data.Foldable (toList)
 import Tour (mkEulerTour, fromEulerTour)
@@ -20,7 +20,8 @@ d e
 d f
 |]
 
-drawTree = drawT (init . tail . show) 
+drawTree = drawT (init . tail . show)
+readT = fromString head 
 
 line = do
     setSGR [ SetColor Foreground Vivid Red]
@@ -39,9 +40,9 @@ main = do
     setTitle "Euler Tour Test"
     line
     parag "Serialization" t1
-    parag "Tree"  $ drawTree $ fromString t1
-    parag "Euler tour" $ toList . mkEulerTour $ fromString t1
-    parag "Euler tour -> Tree" $ drawTree $ fromEulerTour .  mkEulerTour $ fromString t1
+    parag "Tree"  $ drawTree $ readT t1
+    parag "Euler tour" $ toList . mkEulerTour $ readT t1
+    parag "Euler tour -> Tree" $ drawTree $ fromEulerTour .  mkEulerTour $ readT t1
     setTitle ""
 
 

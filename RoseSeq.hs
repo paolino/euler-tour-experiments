@@ -1,7 +1,8 @@
 
 {-# language ViewPatterns, DeriveFunctor #-}
 
-module RoseSeq (T,mkT, viewT, drawT, Z , mkZ, focus , top, up, tree, insertC)  where
+module RoseSeq (T,mkT, viewT, drawT, SerT (..) , 
+        serializeT, rebuildT, Z , mkZ, focus , top, up, tree, insertC)  where
 
 import qualified Data.Map as M
 import qualified Data.Sequence as S
@@ -11,7 +12,19 @@ import Data.Maybe (fromJust)
 import Data.Sequence (viewr, viewl, ViewR ((:>)), ViewL ((:<)), (|>), (<|))
 import Data.Foldable (toList)
 
-import Edge (E)
+import Control.Arrow hiding (right)
+import Data.List
+import Data.Ord
+import Data.Function
+
+-- edge
+type E a = (a,a)
+
+mkMap :: Ord a => [E a] -> M.Map a [a]
+mkMap =     sortBy (comparing fst) >>>
+            groupBy ((==) `on` fst) >>> 
+            map (fst . head &&& map snd) >>> 
+            M.fromList
 
 type St a = S.Seq (T a)
 
@@ -25,6 +38,17 @@ mkT (fmap S.fromList -> es) = mkT' Nothing where
         | M.null es = T i (S.empty)
         | otherwise = T i . fmap (mkT' $ Just i) 
                 . maybe id (S.filter . (/=)) mj $ M.findWithDefault mempty i es
+
+data SerT a = SerT a [E a] deriving (Show,Read)
+
+rebuildT :: Ord a => SerT a  -> T a
+rebuildT (SerT t es) = mkT (mkMap es) t
+
+serializeT :: T a -> SerT a
+serializeT = uncurry SerT . serializeT' where
+    serializeT' (T x xs) = let 
+        (vs,es) = unzip $ serializeT' <$> toList xs
+        in (x,map ((,) x) vs ++ concat es)
 
 
 convert (T x xs) = Node x $ map convert $ toList xs
