@@ -1,0 +1,7 @@
+1
+2
+a b
+a c
+connected a b True
+connected a c True
+connected b c False

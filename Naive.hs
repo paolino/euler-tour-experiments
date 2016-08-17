@@ -8,6 +8,8 @@ import Control.Arrow hiding (right)
 import Data.List hiding (delete)
 import Data.Ord
 import Data.Function
+import Control.Monad
+import System.IO
 
 -- edge
 type E a = (a,a)
@@ -45,7 +47,6 @@ link ms x y = let
     ([my],ms'') = partition (y `M.member`) ms'
     in addLink x y (M.union mx my) : ms''
 
-
 delete :: Ord a => DynTs a -> a -> a -> DynTs a
 delete ms x y = let 
     ([mxy],ms') = partition (x `M.member`) ms
@@ -54,5 +55,21 @@ delete ms x y = let
     (mx,my) = M.partitionWithKey (\k _ -> k `S.member` sx) mxy'
     in mx:my:ms'
     
-    
-    
+
+main = do
+    n <- readLn
+    ds <- fmap (map mkMap) . replicateM n $ do
+        m <- readLn
+        replicateM m $ (\[x,y] -> (head x, head y)) <$> words <$> getLine
+    let f rs ds = do
+            t <- isEOF
+            if not t then do
+                c:[x]:[y]:r <- words <$> getLine
+                case c of
+                    "connected" -> f ((connected ds x y == read (head r)):rs) ds
+                    "link" -> f rs $ link ds x y
+                    "delete" -> f rs $ delete ds x y
+            else return rs
+    f [] ds >>= mapM_ print . reverse
+
+   
