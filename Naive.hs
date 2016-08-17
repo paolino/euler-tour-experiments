@@ -28,13 +28,15 @@ swap (x,y) = (y,x)
 addLink x y = f x y . f y x  where
     f x y = M.insertWith S.union x (S.singleton y)
 
-connected0 m x y = connected' (S.singleton x) where
-    connected' s = case  S.minView s of
+connected0 m x y = connected' (S.singleton x) (S.singleton x) where
+    connected' s st = case  S.minView s of
         Nothing -> False
-        Just (k,s') -> let 
-            s'' = m M.! k
-            in if y `S.member` s'' then True 
-                else connected' $ s' `S.union` s''
+        Just (k,s') -> case M.lookup k m of
+            Just s'' -> let  
+                s''' = s'' `S.difference` st
+                in if y `S.member` s''' then True 
+                    else connected' (s' `S.union` s''') (st `S.union` s''')
+            Nothing -> False
 
 type DynTs a = [DynT a]
 
