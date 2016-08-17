@@ -4,4 +4,4 @@ a b
 a c
 connected a b True
 connected a c True
-connected b c False
+connected b c True
