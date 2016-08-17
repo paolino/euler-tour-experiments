@@ -14,7 +14,7 @@ connected e d True
 link a d
 connected a d True
 connected c f True
-delete d a
+cut d a
 connected a d False
 connected c f False
 connected a b True

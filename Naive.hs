@@ -49,8 +49,8 @@ link ms x y = let
     ([my],ms'') = partition (y `M.member`) ms'
     in addLink x y (M.union mx my) : ms''
 
-delete :: Ord a => DynTs a -> a -> a -> DynTs a
-delete ms x y = let 
+cut :: Ord a => DynTs a -> a -> a -> DynTs a
+cut ms x y = let 
     ([mxy],ms') = partition (x `M.member`) ms
     sx = S.delete y $ mxy M.! x
     mxy' = M.adjust (S.delete x) y  mxy 
@@ -70,7 +70,7 @@ main = do
                 case c of
                     "connected" -> f ((connected ds x y == read (head r)):rs) ds
                     "link" -> f rs $ link ds x y
-                    "delete" -> f rs $ delete ds x y
+                    "cut" -> f rs $ cut ds x y
             else return rs
     f [] ds >>= mapM_ print . reverse
 
