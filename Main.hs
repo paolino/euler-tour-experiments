@@ -4,7 +4,7 @@ module Main where
 import System.Console.ANSI
 
 import Data.String.Here
-import Serialize (fromString)
+import Serialize (fromString, toString)
 import RoseSeq (drawT)
 import Data.Foldable (toList)
 import Tour (mkEulerTour, fromEulerTour)
@@ -43,6 +43,8 @@ main = do
     parag "Tree"  $ drawTree $ readT t1
     parag "Euler tour" $ toList . mkEulerTour $ readT t1
     parag "Euler tour -> Tree" $ drawTree $ fromEulerTour .  mkEulerTour $ readT t1
+    parag "Euler tour -> Tree -> Serialization" $ toString return $ fromEulerTour .  mkEulerTour $ readT t1
+
     setTitle ""
 
 
